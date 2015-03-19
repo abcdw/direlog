@@ -2,40 +2,48 @@
 # encoding: utf-8
 import sys
 import re
+import argparse
 
 from patterns import pre_patterns
 
 
-def prepare(infilename, outfilename=None):
+def prepare(infile):
     """
-    Apply pre_patterns from patterns to inputfile
+    Apply pre_patterns from patterns to infile
 
-    :infilename: input filename
-    :outfilename: output filename for prepared text
+    :infile: input file
 
     """
 
-    if outfilename:
-        outfile = open(outfilename, 'w')
-    else:
-        outfile = sys.stdout
-
-    with open(infilename, 'r') as infile:
+    try:
         for line in infile:
             result = line
             for pattern in pre_patterns:
                 result = re.sub(pattern[0], pattern[1], result)
-                outfile.write(result)
-
-    if not outfile is sys.stdout:
-        outfile.close()
+                sys.stdout.write(result)
+    except (KeyboardInterrupt):
+        pass
 
 
 def main():
+    parser = argparse.ArgumentParser(description='Parse file[s]')
+    parser.add_argument('file', nargs='*', default=[],
+                        help='file[s] to do some work')
+    parser.add_argument('-s', '--stat', action='store_const', const=True,
+                        help='get statistics')
+    args = parser.parse_args()
 
-    filename = 'error_log_test'
-    filename = 'error_log'
-    prepare(filename)
+    if not args.file:
+        prepare(sys.stdin)
+    else:
+        for filename in args.file:
+            with open(filename, 'r') as f:
+                prepare(f)
+
+    # if outfilename:
+        # outfile = open(outfilename, 'w')
+    # else:
+        # outfile = sys.stdout
 
     pass
 
