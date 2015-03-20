@@ -3,11 +3,12 @@
 import sys
 import re
 import argparse
+from argparse import RawDescriptionHelpFormatter
 
 from patterns import pre_patterns
 
 
-def prepare(infile):
+def prepare(infile, outfile=sys.stdout):
     """
     Apply pre_patterns from patterns to infile
 
@@ -19,14 +20,20 @@ def prepare(infile):
         for line in infile:
             result = line
             for pattern in pre_patterns:
-                result = re.sub(pattern[0], pattern[1], result)
-                sys.stdout.write(result)
+                result = re.sub(pattern[0], pattern[1], result, re.VERBOSE)
+            outfile.write(result)
     except (KeyboardInterrupt):
         pass
+    except:
+        raise
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Parse file[s]')
+    parser = argparse.ArgumentParser(description=\
+    """
+    Parse file[s]\n\n
+    examlpe: cat error_log | tail -n 1000 | ./direlog.py
+    """, formatter_class=RawDescriptionHelpFormatter)
     parser.add_argument('file', nargs='*', default=[],
                         help='file[s] to do some work')
     parser.add_argument('-s', '--stat', action='store_const', const=True,
@@ -39,11 +46,6 @@ def main():
         for filename in args.file:
             with open(filename, 'r') as f:
                 prepare(f)
-
-    # if outfilename:
-        # outfile = open(outfilename, 'w')
-    # else:
-        # outfile = sys.stdout
 
     pass
 
