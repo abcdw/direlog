@@ -28,4 +28,8 @@ pre_patterns = [
         r'js:\d+:\d+',
         r'js:POSITION_SUBSTITUTE',
     ),
+    (
+        r'line \d+',
+        r'LINE_SUBSTITUTE',
+    ),
 ]
