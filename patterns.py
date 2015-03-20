@@ -32,4 +32,8 @@ pre_patterns = [
         r'line \d+',
         r'LINE_SUBSTITUTE',
     ),
+    (
+        r'\w{3} \w{3} \d{1,2} \d{1,2}:\d{1,2}:\d{1,2} \d{4}',
+        r'TIMESTAMP_SUBSTITUTE',
+    ),
 ]
