@@ -38,11 +38,9 @@ def main():
     """, formatter_class=RawDescriptionHelpFormatter)
     parser.add_argument('file', nargs='*', default=[],
                         help='file[s] to do some work')
-    parser.add_argument('-s', '--stat', action='store_const', const=True,
-                        help='get statistics')
     args = parser.parse_args()
 
-    input_stream = fileinput.input(args.stat)
+    input_stream = fileinput.input(args.file)
 
 
     prepare(input_stream)
