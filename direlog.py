@@ -3,6 +3,8 @@
 import sys
 import re
 import argparse
+import fileinput
+
 from argparse import RawDescriptionHelpFormatter
 
 from patterns import pre_patterns
@@ -40,12 +42,10 @@ def main():
                         help='get statistics')
     args = parser.parse_args()
 
-    if not args.file:
-        prepare(sys.stdin)
-    else:
-        for filename in args.file:
-            with open(filename, 'r') as f:
-                prepare(f)
+    input_stream = fileinput.input(args.stat)
+
+
+    prepare(input_stream)
 
     pass
 
