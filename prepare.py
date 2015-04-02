@@ -10,16 +10,16 @@ from argparse import RawDescriptionHelpFormatter
 from patterns import pre_patterns
 
 
-def prepare(infile, outfile=sys.stdout):
+def prepare(input_stream, outfile=sys.stdout):
     """
-    Apply pre_patterns from patterns to infile
+    Apply pre_patterns from patterns to input_stream
 
-    :infile: input file
+    :input_stream: input stream
 
     """
 
     try:
-        for line in infile:
+        for line in input_stream:
             result = line
             for pattern in pre_patterns:
                 result = re.sub(pattern[0], pattern[1], result, re.VERBOSE)
