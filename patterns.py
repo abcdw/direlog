@@ -36,4 +36,13 @@ pre_patterns = [
         r'\w{3} \w{3} \d{1,2} \d{1,2}:\d{1,2}:\d{1,2} \d{4}',
         r'TIMESTAMP_SUBSTITUTE',
     ),
+    (
+        r"'0x[a-f0-9]{7}'",
+        r"'AJAX_VERSION_SUBSTITUTE'",
+    ),
+]
+
+main_patterns = [
+    r'Expected an even-sized list of pairs (k1, v1, ... kN, vN), got (p0)',
+    r'Names not in dictionary:',
 ]
