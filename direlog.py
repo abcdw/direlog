@@ -99,7 +99,7 @@ pattern: "{}"
 
     lines_above = [''] * LINES_ABOVE
 
-    line_number = 0
+    line_number = 1
     for line in input_stream:
         lines_above.append(line)
         lines_above = lines_above[1:LINES_ABOVE+1]
