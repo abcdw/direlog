@@ -26,9 +26,10 @@ def show_snippets(input_stream, patterns=main_patterns):
     SNIPPETS_TO_SHOW = 5
 
     class Snippet(object):
-        def __init__(self, lines_above, pattern):
+        def __init__(self, lines_above, pattern, line_number):
             self.text = copy.copy(lines_above)
             self.pattern = pattern
+            self.line_number = line_number
 
         def full(self):
             return len(self.text) >= LINES_ABOVE + LINES_BELOW + 1
@@ -40,7 +41,7 @@ def show_snippets(input_stream, patterns=main_patterns):
             i = 0
             for line in self.text:
                 if i == LINES_ABOVE:
-                    sys.stdout.write('|====>')
+                    sys.stdout.write('| {} ==>'.format(self.line_number))
                 else:
                     if re.search(self.pattern, line):
                         sys.stdout.write('|-->')
@@ -55,9 +56,12 @@ def show_snippets(input_stream, patterns=main_patterns):
         def __init__(self):
             self.new_snippets = []
             self.ready_snippets = {}
+            self.pattern_used = {}
 
         def push(self, snippet):
-            self.new_snippets.append(snippet)
+            if not self.pattern_used.get(pattern, False):
+                self.new_snippets.append(snippet)
+            self.pattern_used[pattern] = True
 
         def add(self, line):
             for snippet in self.new_snippets:
@@ -73,6 +77,7 @@ def show_snippets(input_stream, patterns=main_patterns):
                 self.ready_snippets[pattern].append(snippet)
             except KeyError:
                 self.ready_snippets[pattern] = [snippet]
+            self.pattern_used[pattern] = False
 
         def make_all_ready(self):
             for snippet in self.new_snippets:
@@ -94,14 +99,16 @@ pattern: "{}"
 
     lines_above = [''] * LINES_ABOVE
 
+    line_number = 0
     for line in input_stream:
         lines_above.append(line)
         lines_above = lines_above[1:LINES_ABOVE+1]
         for pattern in patterns:
             if re.search(pattern, line):
-                snippet = Snippet(lines_above, pattern)
+                snippet = Snippet(lines_above, pattern, line_number)
                 snippets_queue.push(snippet)
         snippets_queue.add(line)
+        line_number += 1
 
     snippets_queue.make_all_ready()
     snippets_queue.show()
