@@ -6,6 +6,7 @@ import re
 import argparse
 import fileinput
 import copy
+import itertools
 
 from argparse import RawDescriptionHelpFormatter
 
@@ -22,11 +23,12 @@ def show_snippets(input_stream, patterns=main_patterns):
 
     LINES_ABOVE = 3
     LINES_BELOW = 3
+    SNIPPETS_TO_SHOW = 5
 
     class Snippet(object):
-        def __init__(self, lines_above, line):
+        def __init__(self, lines_above, pattern):
             self.text = copy.copy(lines_above)
-            self.matched_line = line
+            self.pattern = pattern
 
         def full(self):
             return len(self.text) >= LINES_ABOVE + LINES_BELOW + 1
@@ -35,41 +37,75 @@ def show_snippets(input_stream, patterns=main_patterns):
             self.text.append(line)
 
         def show(self):
-            print self.text
-            print '\n'
+            i = 0
+            for line in self.text:
+                if i == LINES_ABOVE:
+                    sys.stdout.write('|====>')
+                else:
+                    if re.search(self.pattern, line):
+                        sys.stdout.write('|-->')
+                    else:
+                        sys.stdout.write('|>')
+                sys.stdout.write(line)
+                i += 1
 
+            sys.stdout.write('-' * 80 + '\n')
 
     class SnippetsQueue(object):
         def __init__(self):
-            self.snippets = []
+            self.new_snippets = []
+            self.ready_snippets = {}
 
         def push(self, snippet):
-            self.snippets.append(snippet)
+            self.new_snippets.append(snippet)
 
         def add(self, line):
-            for snippet in self.snippets:
+            for snippet in self.new_snippets:
                 if snippet.full():
-                    snippet.show()
-                    self.snippets.remove(snippet) # TODO: improve speed
+                    self.make_ready(snippet)
                 else:
                     snippet.add(line)
 
+        def make_ready(self, snippet):
+            self.new_snippets.remove(snippet)
+            pattern = snippet.pattern
+            try:
+                self.ready_snippets[pattern].append(snippet)
+            except KeyError:
+                self.ready_snippets[pattern] = [snippet]
+
+        def make_all_ready(self):
+            for snippet in self.new_snippets:
+                make_ready(snippet)
+
+        def show(self):
+            for pattern, snippets in self.ready_snippets.iteritems():
+                print """\
+*********************************************************************************
+pattern: "{}"
+*********************************************************************************\
+""".format(pattern)
+                for snippet in snippets[:SNIPPETS_TO_SHOW]:
+                    snippet.show()
+
+            pass
 
     snippets_queue = SnippetsQueue()
 
     lines_above = [''] * LINES_ABOVE
 
-    # print lines_above
     for line in input_stream:
         lines_above.append(line)
         lines_above = lines_above[1:LINES_ABOVE+1]
         for pattern in patterns:
             if re.search(pattern, line):
-                snippet = Snippet(lines_above, line)
+                snippet = Snippet(lines_above, pattern)
                 snippets_queue.push(snippet)
         snippets_queue.add(line)
 
-    pass
+    snippets_queue.make_all_ready()
+    snippets_queue.show()
+
 
 def main():
     parser = argparse.ArgumentParser(description=\
@@ -80,13 +116,14 @@ def main():
     parser.add_argument('file', nargs='+', default=[],
                         help='file[s] to do some work')
     parser.add_argument('--snippets', action='store_const', const=True)
-    args = parser.parse_args()
+    args = parser.parse_args(['--snippets', 'prep_error_log'])
 
     def input_stream_generator(): return fileinput.input(args.file)
 
     # for line in input_stream_generator():
         # sys.stdout.write(line)
-    show_snippets(input_stream_generator())
+    if args.snippets:
+        show_snippets(input_stream_generator())
 
     pass
 
