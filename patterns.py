@@ -43,6 +43,6 @@ pre_patterns = [
 ]
 
 main_patterns = [
-    r'Expected an even-sized list of pairs (k1, v1, ... kN, vN), got (p0)',
+    r'Expected an even-sized list of pairs \(k1, v1, \.\.\. kN, vN\), got \(p0\)',
     r'Names not in dictionary:',
 ]
