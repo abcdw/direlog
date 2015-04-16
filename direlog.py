@@ -123,7 +123,7 @@ def main():
     parser.add_argument('file', nargs='+', default=[],
                         help='file[s] to do some work')
     parser.add_argument('--snippets', action='store_const', const=True)
-    args = parser.parse_args(['--snippets', 'prep_error_log'])
+    args = parser.parse_args()
 
     def input_stream_generator(): return fileinput.input(args.file)
 
