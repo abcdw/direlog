@@ -12,12 +12,28 @@ from argparse import RawDescriptionHelpFormatter
 
 from patterns import main_patterns
 
-def show_snippets(input_stream, patterns=main_patterns):
-    """show snippets for patterns
+
+class Buffer(object):
+    BUFFER_SIZE = 30
+    """Class for buffering input"""
+
+    def __init__(self):
+        self.buf = [''] * self.BUFFER_SIZE
+        self.line_number = 0
+
+    def add(self, line):
+        self.buf.append(line)
+        self.buf = self.buf[1:self.BUFFER_SIZE+1]
+        self.line_number += 1
+
+
+def show_snippets(input_stream, patterns=main_patterns,
+                  output_stream=sys.stdout):
+    """Show snippets for patterns
 
     :input_stream: input stream
     :patterns: patterns that need to look
-    :returns: None
+    :returns: SnippetsQueue
 
     """
 
@@ -41,16 +57,16 @@ def show_snippets(input_stream, patterns=main_patterns):
             i = 0
             for line in self.text:
                 if i == LINES_ABOVE:
-                    sys.stdout.write('| {} ==>'.format(self.line_number))
+                    output_stream.write('| {} ==>'.format(self.line_number))
                 else:
                     if re.search(self.pattern, line):
-                        sys.stdout.write('|-->')
+                        output_stream.write('|-->')
                     else:
-                        sys.stdout.write('|>')
-                sys.stdout.write(line)
+                        output_stream.write('|>')
+                output_stream.write(line)
                 i += 1
 
-            sys.stdout.write('-' * 80 + '\n')
+            output_stream.write('-' * 80 + '\n')
 
     class SnippetsQueue(object):
         def __init__(self):
@@ -112,6 +128,8 @@ pattern: "{}"
 
     snippets_queue.make_all_ready()
     snippets_queue.show()
+
+    return snippets_queue
 
 
 def main():
