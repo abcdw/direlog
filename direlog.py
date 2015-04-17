@@ -154,6 +154,14 @@ pattern: "{}"
     return snippets_queue
 
 
+def show_patterns():
+    """Show patterns from patterns.py
+    """
+    for pattern in main_patterns:
+        print pattern
+        print '-' * 80
+
+
 def main():
     parser = argparse.ArgumentParser(description=\
     """
@@ -161,14 +169,21 @@ def main():
         examlpe: ./direlog.py file[s]
     """, formatter_class=RawDescriptionHelpFormatter)
     parser.add_argument('file', nargs='+', default=[],
-                        help='file[s] to do some work')
-    parser.add_argument('--snippets', action='store_const', const=True)
+                        help='file[s] to be parsed')
+    parser.add_argument('-s', '--snippets', action='store_const', const=True,
+                        help='show snippets')
+    parser.add_argument('-p', '--patterns', action='store_const', const=True,
+                        help='show patterns')
     args = parser.parse_args()
 
     def input_stream_generator(): return fileinput.input(args.file)
 
     # for line in input_stream_generator():
         # sys.stdout.write(line)
+
+    if args.patterns:
+        show_patterns()
+
     if args.snippets:
         show_snippets(input_stream_generator())
 
