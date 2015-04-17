@@ -13,18 +13,38 @@ from argparse import RawDescriptionHelpFormatter
 from patterns import main_patterns
 
 
+BUFFER_SIZE = 30
+
 class Buffer(object):
-    BUFFER_SIZE = 30
     """Class for buffering input"""
 
     def __init__(self):
-        self.buf = [''] * self.BUFFER_SIZE
-        self.line_number = 0
+        self.buf = [''] * BUFFER_SIZE
+        self.line_scrolled = 0
 
     def add(self, line):
         self.buf.append(line)
-        self.buf = self.buf[1:self.BUFFER_SIZE+1]
-        self.line_number += 1
+        self.buf = self.buf[1:BUFFER_SIZE+1]
+        self.line_scrolled += 1
+
+
+class PatternBuffer(Buffer):
+
+    """Add patterns support to Buffer"""
+
+    def __init__(self):
+        super(PatternBuffer, self).__init__(self)
+
+
+def make_escaped(string):
+    """Make escaped pattern from string
+
+    :string: string to be escaped
+    :returns: pattern
+
+    """
+
+    return re.escape(string.replace('\n', 'NSLPH')).replace('NSLPH', '\n')
 
 
 def show_snippets(input_stream, patterns=main_patterns,
@@ -119,10 +139,12 @@ pattern: "{}"
     for line in input_stream:
         lines_above.append(line)
         lines_above = lines_above[1:LINES_ABOVE+1]
+
         for pattern in patterns:
             if re.search(pattern, line):
                 snippet = Snippet(lines_above, pattern, line_number)
                 snippets_queue.push(snippet)
+
         snippets_queue.add(line)
         line_number += 1
 
