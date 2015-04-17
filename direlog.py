@@ -47,7 +47,8 @@ def make_escaped(string):
     return re.escape(string.replace('\n', 'NSLPH')).replace('NSLPH', '\n') + r'\n\Z'
 
 
-def show_snippets(input_stream, patterns=main_patterns,
+def show_snippets(input_stream, snippets_count, context=3,
+                  patterns=main_patterns,
                   output_stream=sys.stdout):
     """Show snippets for patterns
 
@@ -57,9 +58,9 @@ def show_snippets(input_stream, patterns=main_patterns,
 
     """
 
-    LINES_ABOVE = 3
-    LINES_BELOW = 3
-    SNIPPETS_TO_SHOW = 5
+    LINES_ABOVE = context
+    LINES_BELOW = context
+    SNIPPETS_TO_SHOW = snippets_count
 
     class Snippet(object):
         def __init__(self, lines_above, pattern, line_number):
@@ -117,7 +118,7 @@ def show_snippets(input_stream, patterns=main_patterns,
 
         def make_all_ready(self):
             for snippet in self.new_snippets:
-                make_ready(snippet)
+                self.make_ready(snippet)
 
         def show(self):
             for pattern, snippets in self.ready_snippets.iteritems():
@@ -133,16 +134,16 @@ pattern: "{}"
 
     snippets_queue = SnippetsQueue()
 
-    lines_above = [''] * LINES_ABOVE
 
     line_number = 1
-    for line in input_stream:
-        lines_above.append(line)
-        lines_above = lines_above[1:LINES_ABOVE+1]
+    input_buffer = Buffer()
 
+    for line in input_stream:
+        input_buffer.add(line)
         for pattern in patterns:
-            if re.search(pattern, line):
-                snippet = Snippet(lines_above, pattern, line_number)
+            text = ''.join(input_buffer.buf)
+            if re.search(pattern, text):
+                snippet = Snippet(input_buffer.buf[-LINES_ABOVE:], pattern, line_number)
                 snippets_queue.push(snippet)
 
         snippets_queue.add(line)
@@ -172,8 +173,10 @@ def main():
     """, formatter_class=RawDescriptionHelpFormatter)
     parser.add_argument('file', nargs='+', default=[],
                         help='file[s] to be parsed')
-    parser.add_argument('-s', '--snippets', action='store_const', const=True,
-                        help='show snippets')
+    parser.add_argument('-s', '--snippets', nargs='?', type=int, const=5,
+                        help='show SNIPPETS snippets (5 default)')
+    parser.add_argument('-C', '--context', nargs='?', type=int,
+                        help='show CONTEXT lines around snippet last line')
     parser.add_argument('-p', '--patterns', action='store_const', const=True,
                         help='show patterns')
     args = parser.parse_args()
@@ -186,8 +189,13 @@ def main():
     if args.patterns:
         show_patterns()
 
+    print args
+
     if args.snippets:
-        show_snippets(input_stream_generator())
+        kwargs = {}
+        if args.context:
+            kwargs['context'] = args.context
+        show_snippets(input_stream_generator(), args.snippets, **kwargs)
 
     pass
 
