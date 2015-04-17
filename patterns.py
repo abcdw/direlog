@@ -43,9 +43,9 @@ pre_patterns = [
 ]
 
 main_patterns = [
-    r'Expected\ an\ even\-sized\ list\ of\ pairs\ \(k1\,\ v1\,\ \.\.\.\ kN\,\ vN\)\,\ got\ \(p0\)',
+    r'Expected\ an\ even\-sized\ list\ of\ pairs\ \(k1\,\ v1\,\ \.\.\.\ kN\,\ vN\)\,\ got\ \(p0\)\n\Z',
 
-    r'Names\ not\ in\ dictionary\:',
+    r'Names\ not\ in\ dictionary\:\n\Z',
 
     r"""JavaScript\.\ TypeError\:\ Object\ \#\<t\>\ has\ no\ method\ \'Ukraine\'
 \ \ \ \ at\ Object\.blocks\.b\-counters\_\_gemius\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
@@ -57,6 +57,6 @@ main_patterns = [
 \ \ \ \ at\ Object\.\[object\ Function\]\.Object\.toString\.call\.e\.\(anonymous\ function\)\ \[as\ b\-page\_\_content\]\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
 \ \ \ \ at\ blocks\.b\-page\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
 \ \ \ \ at\ Object\.blocks\.b\-page\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
-\ \ \ \ at\ Object\.\[object\ Function\]\.Object\.toString\.call\.e\.\(anonymous\ function\)\ \[as\ b\-page\]\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)\ at\ \/db\/BASE\/upper\-000\-1426519150\/arkanavt\/report\/lib\/YxWeb\/Util\/Template\/JS\.pm\ LINE\_SUBSTITUTE\.\ \(Object\.blocks\.b\-page\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)\)""",
+\ \ \ \ at\ Object\.\[object\ Function\]\.Object\.toString\.call\.e\.\(anonymous\ function\)\ \[as\ b\-page\]\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)\ at\ \/db\/BASE\/upper\-000\-1426519150\/arkanavt\/report\/lib\/YxWeb\/Util\/Template\/JS\.pm\ LINE\_SUBSTITUTE\.\ \(Object\.blocks\.b\-page\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)\)\n\Z""",
 
 ]
