@@ -45,7 +45,7 @@ pre_patterns = [
 main_patterns = [
     r'Expected\ an\ even\-sized\ list\ of\ pairs\ \(k1\,\ v1\,\ \.\.\.\ kN\,\ vN\)\,\ got\ \(p0\)\n\Z',
 
-    r'Names\ not\ in\ dictionary\:\n\Z',
+    r'Names\ not\ in\ dictionary\:.*\n\Z',
 
     r"""JavaScript\.\ TypeError\:\ Object\ \#\<t\>\ has\ no\ method\ \'Ukraine\'
 \ \ \ \ at\ Object\.blocks\.b\-counters\_\_gemius\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
