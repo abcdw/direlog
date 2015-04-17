@@ -44,7 +44,7 @@ def make_escaped(string):
 
     """
 
-    return re.escape(string.replace('\n', 'NSLPH')).replace('NSLPH', '\n')
+    return re.escape(string.replace('\n', 'NSLPH')).replace('NSLPH', '\n') + r'\n\Z'
 
 
 def show_snippets(input_stream, patterns=main_patterns,
@@ -156,7 +156,9 @@ pattern: "{}"
 
 def show_patterns():
     """Show patterns from patterns.py
+
     """
+
     for pattern in main_patterns:
         print pattern
         print '-' * 80
