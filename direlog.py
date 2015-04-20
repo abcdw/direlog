@@ -34,13 +34,6 @@ class Buffer(object):
         """
         return ''.join(self.buf)
 
-class PatternBuffer(Buffer):
-
-    """Add patterns support to Buffer"""
-
-    def __init__(self):
-        super(PatternBuffer, self).__init__(self)
-
 
 def make_escaped(string):
     """Make escaped pattern from string
@@ -163,7 +156,7 @@ number of matches: {}
             if snippets_queue:
                 for snippet in snippets_queue.ready_snippets[pattern]:
                     snippet.show()
-        pass
+
 
     stat_collector = StatCollector()
     snippets_queue = SnippetsQueue()
@@ -189,9 +182,7 @@ number of matches: {}
 
 
 def show_patterns():
-    """Show patterns from patterns.py
-
-    """
+    """Show patterns from patterns.py"""
 
     for pattern in main_patterns:
         print pattern
@@ -218,8 +209,6 @@ def main():
 
     if args.patterns:
         show_patterns()
-
-    # print args
 
     kwargs = {}
     if args.snippets:
