@@ -27,6 +27,12 @@ class Buffer(object):
         self.buf = self.buf[1:BUFFER_SIZE+1]
         self.line_scrolled += 1
 
+    def text(self):
+        """Return joined lines
+        :returns: str()
+
+        """
+        return ''.join(self.buf)
 
 class PatternBuffer(Buffer):
 
@@ -47,20 +53,24 @@ def make_escaped(string):
     return re.escape(string.replace('\n', 'NSLPH')).replace('NSLPH', '\n') + r'\n\Z'
 
 
-def show_snippets(input_stream, snippets_count, context=3,
-                  patterns=main_patterns,
-                  output_stream=sys.stdout):
-    """Show snippets for patterns
+def show_stat(input_stream, snippets_count=0, context=3,
+              patterns=main_patterns,
+              output_stream=sys.stdout):
+    """Show statistics for patterns
 
     :input_stream: input stream
+    :snippets_count: maximum number of snippets to show for every pattern
+    :context: number of lines in snippet around last line of pattern match
     :patterns: patterns that need to look
-    :returns: SnippetsQueue
+    :output_stream: stream for output
+    :returns: None
 
     """
 
     LINES_ABOVE = context
     LINES_BELOW = context
     SNIPPETS_TO_SHOW = snippets_count
+    SHOW_SNIPPETS = snippets_count > 0
 
     class Snippet(object):
         def __init__(self, lines_above, pattern, line_number):
@@ -89,6 +99,7 @@ def show_snippets(input_stream, snippets_count, context=3,
 
             output_stream.write('-' * 80 + '\n')
 
+
     class SnippetsQueue(object):
         def __init__(self):
             self.new_snippets = []
@@ -115,44 +126,66 @@ def show_snippets(input_stream, snippets_count, context=3,
             except KeyError:
                 self.ready_snippets[pattern] = [snippet]
             self.pattern_used[pattern] = False
+            if len(self.ready_snippets[pattern]) == SNIPPETS_TO_SHOW:
+                self.pattern_used[pattern] = True
 
         def make_all_ready(self):
             for snippet in self.new_snippets:
                 self.make_ready(snippet)
 
-        def show(self):
-            for pattern, snippets in self.ready_snippets.iteritems():
-                print """\
-*********************************************************************************
-pattern: "{}"
-*********************************************************************************\
-""".format(pattern)
-                for snippet in snippets[:SNIPPETS_TO_SHOW]:
-                    snippet.show()
 
+    class StatCollector(object):
+
+        """Class for collecting statistics"""
+
+        def __init__(self):
+            self.match_count = {}
             pass
 
+        def add(self, pattern):
+            """Add pattern matching event"""
+            try:
+                self.match_count[pattern] += 1
+            except KeyError:
+                self.match_count[pattern] = 1
+
+
+    def print_stat(stat_collector, snippets_queue=None):
+        """Print statistics and snippets"""
+        for pattern, count in stat_collector.match_count.iteritems():
+            print """\
+********************************************************************************
+pattern: "{}"
+--------------------------------------------------------------------------------
+number of matches: {}
+********************************************************************************\
+""".format(pattern, count)
+            if snippets_queue:
+                for snippet in snippets_queue.ready_snippets[pattern]:
+                    snippet.show()
+        pass
+
+    stat_collector = StatCollector()
     snippets_queue = SnippetsQueue()
-
-
     line_number = 1
     input_buffer = Buffer()
 
     for line in input_stream:
         input_buffer.add(line)
         for pattern in patterns:
-            text = ''.join(input_buffer.buf)
+            text = input_buffer.text()
             if re.search(pattern, text):
-                snippet = Snippet(input_buffer.buf[-LINES_ABOVE:], pattern, line_number)
-                snippets_queue.push(snippet)
+                if SHOW_SNIPPETS:
+                    snippet = Snippet(input_buffer.buf[-LINES_ABOVE:], pattern,
+                                    line_number)
+                    snippets_queue.push(snippet)
+                stat_collector.add(pattern)
 
         snippets_queue.add(line)
         line_number += 1
 
     snippets_queue.make_all_ready()
-    snippets_queue.show()
-
-    return snippets_queue
+    print_stat(stat_collector, snippets_queue)
 
 
 def show_patterns():
@@ -174,28 +207,28 @@ def main():
     parser.add_argument('file', nargs='+', default=[],
                         help='file[s] to be parsed')
     parser.add_argument('-s', '--snippets', nargs='?', type=int, const=5,
-                        help='show SNIPPETS snippets (5 default)')
+                        help='show maximum SNIPPETS snippets (5 default)')
     parser.add_argument('-C', '--context', nargs='?', type=int,
-                        help='show CONTEXT lines around snippet last line')
+                        help='show CONTEXT lines around pattern last line')
     parser.add_argument('-p', '--patterns', action='store_const', const=True,
                         help='show patterns')
     args = parser.parse_args()
 
     def input_stream_generator(): return fileinput.input(args.file)
 
-    # for line in input_stream_generator():
-        # sys.stdout.write(line)
-
     if args.patterns:
         show_patterns()
 
-    print args
+    # print args
 
+    kwargs = {}
     if args.snippets:
-        kwargs = {}
-        if args.context:
-            kwargs['context'] = args.context
-        show_snippets(input_stream_generator(), args.snippets, **kwargs)
+        kwargs['snippets_count'] = args.snippets
+
+    if args.context:
+        kwargs['context'] = args.context
+
+    show_stat(input_stream_generator(), **kwargs)
 
     pass
 
