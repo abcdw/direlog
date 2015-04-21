@@ -48,7 +48,7 @@ def make_escaped(string):
 
 def show_stat(input_stream, snippets_count=0, context=3,
               patterns=main_patterns,
-              output_stream=sys.stdout):
+              output_stream=sys.stdout, snippets_file=None):
     """Show statistics for patterns
 
     :input_stream: input stream
@@ -89,8 +89,6 @@ def show_stat(input_stream, snippets_count=0, context=3,
                         output_stream.write('|>')
                 output_stream.write(line)
                 i += 1
-
-            output_stream.write('-' * 80 + '\n')
 
 
     class SnippetsQueue(object):
@@ -154,23 +152,36 @@ number of matches: {}
 ********************************************************************************\
 """.format(pattern, count)
             if snippets_queue:
-                for snippet in snippets_queue.ready_snippets[pattern]:
-                    snippet.show()
+                if pattern in snippets_queue.ready_snippets:
+                    for snippet in snippets_queue.ready_snippets[pattern]:
+                        snippet.show()
+                        output_stream.write('-' * 80 + '\n')
+                else:
+                    output_stream.write('|No snippets found : (\n')
+                    output_stream.write('-' * 80 + '\n')
 
 
     stat_collector = StatCollector()
     snippets_queue = SnippetsQueue()
     line_number = 1
     input_buffer = Buffer()
+    if snippets_file:
+        snippets_buffer = Buffer()
+    else:
+        snippets_buffer = input_buffer
 
     for line in input_stream:
         input_buffer.add(line)
+        if snippets_file:
+            line = snippets_file.readline()
+            snippets_buffer.add(line)
+
         for pattern in patterns:
             text = input_buffer.text()
             if re.search(pattern, text):
                 if SHOW_SNIPPETS:
-                    snippet = Snippet(input_buffer.buf[-LINES_ABOVE:], pattern,
-                                    line_number)
+                    snippet = Snippet(snippets_buffer.buf[-LINES_ABOVE:], pattern,
+                                      line_number)
                     snippets_queue.push(snippet)
                 stat_collector.add(pattern)
 
@@ -178,6 +189,8 @@ number of matches: {}
         line_number += 1
 
     snippets_queue.make_all_ready()
+    if not SHOW_SNIPPETS:
+        snippets_queue = None
     print_stat(stat_collector, snippets_queue)
 
 
@@ -193,9 +206,9 @@ def main():
     parser = argparse.ArgumentParser(description=\
     """
         Parse file[s]\n\n
-        examlpe: ./direlog.py file[s]
+        examlpe: ./direlog.py file[s] -s 2 -C 3
     """, formatter_class=RawDescriptionHelpFormatter)
-    parser.add_argument('file', nargs='+', default=[],
+    parser.add_argument('file', nargs='*', default=[],
                         help='file[s] to be parsed')
     parser.add_argument('-s', '--snippets', nargs='?', type=int, const=5,
                         help='show maximum SNIPPETS snippets (5 default)')
@@ -203,12 +216,28 @@ def main():
                         help='show CONTEXT lines around pattern last line')
     parser.add_argument('-p', '--patterns', action='store_const', const=True,
                         help='show patterns')
+    parser.add_argument('-e', '--escape', action='store_const', const=True,
+                        help='escape given string')
+    parser.add_argument('--original', nargs=1,
+                        help='provide original file for better snippets')
+
     args = parser.parse_args()
+    # args = parser.parse_args(['error_log.prep', '-s', '2',
+                              # '--original', 'error_log'])
 
     def input_stream_generator(): return fileinput.input(args.file)
 
     if args.patterns:
         show_patterns()
+        return
+
+    if args.escape:
+        text = ''
+        for line in input_stream_generator():
+            text += line
+        escaped_text = make_escaped(text)
+        print escaped_text
+        return
 
     kwargs = {}
     if args.snippets:
@@ -217,9 +246,11 @@ def main():
     if args.context:
         kwargs['context'] = args.context
 
+    if args.original:
+        kwargs['snippets_file'] = fileinput.input(args.original)
+
     show_stat(input_stream_generator(), **kwargs)
 
-    pass
 
 if __name__ == '__main__':
     main()
