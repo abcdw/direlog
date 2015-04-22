@@ -61,11 +61,11 @@ main_patterns = [
 \ \ \ \ at\ Object\.\[object\ Function\]\.Object\.toString\.call\.e\.\(anonymous\ function\)\ \[as\ b\-page\_\_content\]\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
 \ \ \ \ at\ blocks\.b\-page\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
 \ \ \ \ at\ Object\.blocks\.b\-page\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
-\ \ \ \ at\ Object\.\[object\ Function\]\.Object\.toString\.call\.e\.\(anonymous\ function\)\ \[as\ b\-page\]\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)\ at\ \/db\/BASE\/upper\-000\-1426519150\/arkanavt\/report\/lib\/YxWeb\/Util\/Template\/JS\.pm\ LINE\_SUBSTITUTE\.\ \(Object\.blocks\.b\-page\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)\)\n\Z""",
+\ \ \ \ at\ Object\.\[object\ Function\]\.Object\.toString\.call\.e\.\(anonymous\ function\)\ \[as\ b\-page\]\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)\ at\ \/db\/BASE\/upper\-SHARD\_SUBSTITUTE\/arkanavt\/report\/lib\/YxWeb\/Util\/Template\/JS\.pm\ LINE\_SUBSTITUTE\.\ \(Object\.blocks\.b\-page\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)\)\n\Z""",
 
-    r'No\ ajax\ static\ version\ \'AJAX\_VERSION\_SUBSTITUTE\'\.\ Found\:\ \'AJAX\_VERSION\_SUBSTITUTE\'\ at\ \/db\/BASE\/upperSHARD\_SUBSTITUTE\/arkanavt\/report\/lib\/YxWeb\/Handler\.pm\ LINE\_SUBSTITUTE\.\n\Z',
+    r'No\ ajax\ static\ version\ \'AJAX\_VERSION\_SUBSTITUTE\'\.\ Found\:\ \'AJAX\_VERSION\_SUBSTITUTE\'\ at\ \/db\/BASE\/upper-SHARD\_SUBSTITUTE\/arkanavt\/report\/lib\/YxWeb\/Handler\.pm\ LINE\_SUBSTITUTE\.\n\Z',
 
-    r'RecodeToUnicode\ failed\ at\ \/db\/BASE\/upperSHARD\_SUBSTITUTE\/arkanavt\/report\/lib\/YxWeb\/Util\/Words\.pm\ LINE\_SUBSTITUTE\.\n\Z',
+    r'RecodeToUnicode\ failed\ at\ \/db\/BASE\/upper-SHARD\_SUBSTITUTE\/arkanavt\/report\/lib\/YxWeb\/Util\/Words\.pm\ LINE\_SUBSTITUTE\.\n\Z',
 
-    r'not\ found\ snippet\ for\ spec\_type\ \'.*\'\ in\ \_ReportSnipAttrs\ at\ \/db\/BASE\/upperSHARD\_SUBSTITUTE\/arkanavt\/report\/lib\/YxWeb\/Module\/Snippet\/List\.pm\ LINE\_SUBSTITUTE\.\n\Z',
+    r'not\ found\ snippet\ for\ spec\_type\ \'.*\'\ in\ \_ReportSnipAttrs\ at\ \/db\/BASE\/upper-SHARD\_SUBSTITUTE\/arkanavt\/report\/lib\/YxWeb\/Module\/Snippet\/List\.pm\ LINE\_SUBSTITUTE\.\n\Z',
 ]
