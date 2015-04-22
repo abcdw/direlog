@@ -135,14 +135,15 @@ def show_stat(input_stream, snippets_count=0, context=3,
 
         def add(self, pattern):
             """Add pattern matching event"""
-            try:
-                self.match_count[pattern] += 1
-            except KeyError:
-                self.match_count[pattern] = 1
+            if pattern not in self.match_count:
+                self.match_count[pattern] = 0
+            self.match_count[pattern] += 1
 
 
     def print_stat(stat_collector, snippets_queue=None):
+
         """Print statistics and snippets"""
+
         for pattern, count in stat_collector.match_count.iteritems():
             print """\
 ********************************************************************************
@@ -236,6 +237,7 @@ def main():
         for line in input_stream_generator():
             text += line
         escaped_text = make_escaped(text)
+        print '\n'
         print escaped_text
         return
 
