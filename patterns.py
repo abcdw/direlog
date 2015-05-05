@@ -36,4 +36,36 @@ pre_patterns = [
         r'\w{3} \w{3} \d{1,2} \d{1,2}:\d{1,2}:\d{1,2} \d{4}',
         r'TIMESTAMP_SUBSTITUTE',
     ),
+    (
+        r"'0x[a-f0-9]{7}'",
+        r"'AJAX_VERSION_SUBSTITUTE'",
+    ),
+    (
+        r'-\d{3}-\d{10}',
+        r'-SHARD_SUBSTITUTE',
+    ),
+]
+
+main_patterns = [
+    r'Expected\ an\ even\-sized\ list\ of\ pairs\ \(k1\,\ v1\,\ \.\.\.\ kN\,\ vN\)\,\ got\ \(p0\)\n\Z',
+
+    r'Names\ not\ in\ dictionary\:.*\n\Z',
+
+    r"""JavaScript\.\ TypeError\:\ Object\ \#\<t\>\ has\ no\ method\ \'Ukraine\'
+\ \ \ \ at\ Object\.blocks\.b\-counters\_\_gemius\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
+\ \ \ \ at\ Object\.\[object\ Function\]\.Object\.toString\.call\.e\.\(anonymous\ function\)\ \[as\ b\-counters\_\_gemius\]\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
+\ \ \ \ at\ Object\.blocks\.b\-counters\.blocks\.b\-cntrs\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
+\ \ \ \ at\ Object\.\[object\ Function\]\.Object\.toString\.call\.e\.\(anonymous\ function\)\ \[as\ b\-counters\]\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
+\ \ \ \ at\ Object\.blocks\.b\-page\_\_content\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
+\ \ \ \ at\ Object\.blocks\.b\-page\_\_content\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
+\ \ \ \ at\ Object\.\[object\ Function\]\.Object\.toString\.call\.e\.\(anonymous\ function\)\ \[as\ b\-page\_\_content\]\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
+\ \ \ \ at\ blocks\.b\-page\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
+\ \ \ \ at\ Object\.blocks\.b\-page\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)
+\ \ \ \ at\ Object\.\[object\ Function\]\.Object\.toString\.call\.e\.\(anonymous\ function\)\ \[as\ b\-page\]\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)\ at\ \/db\/BASE\/upper\-SHARD\_SUBSTITUTE\/arkanavt\/report\/lib\/YxWeb\/Util\/Template\/JS\.pm\ LINE\_SUBSTITUTE\.\ \(Object\.blocks\.b\-page\ \(web3\_exp\/pages\-desktop\/search\/\_search\.all\.priv\.js\:POSITION\_SUBSTITUTE\)\)\n\Z""",
+
+    r'No\ ajax\ static\ version\ \'AJAX\_VERSION\_SUBSTITUTE\'\.\ Found\:\ \'AJAX\_VERSION\_SUBSTITUTE\'\ at\ \/db\/BASE\/upper-SHARD\_SUBSTITUTE\/arkanavt\/report\/lib\/YxWeb\/Handler\.pm\ LINE\_SUBSTITUTE\.\n\Z',
+
+    r'RecodeToUnicode\ failed\ at\ \/db\/BASE\/upper-SHARD\_SUBSTITUTE\/arkanavt\/report\/lib\/YxWeb\/Util\/Words\.pm\ LINE\_SUBSTITUTE\.\n\Z',
+
+    r'not\ found\ snippet\ for\ spec\_type\ \'.*\'\ in\ \_ReportSnipAttrs\ at\ \/db\/BASE\/upper-SHARD\_SUBSTITUTE\/arkanavt\/report\/lib\/YxWeb\/Module\/Snippet\/List\.pm\ LINE\_SUBSTITUTE\.\n\Z',
 ]

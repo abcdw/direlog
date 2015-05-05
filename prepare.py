@@ -33,8 +33,8 @@ def prepare(input_stream, outfile=sys.stdout):
 def main():
     parser = argparse.ArgumentParser(description=\
     """
-    Parse file[s]\n\n
-    examlpe: cat error_log | tail -n 1000 | ./direlog.py
+        Prepare file[s]\n\n
+        examlpe: cat error_log | tail -n 1000 | ./prepare.py
     """, formatter_class=RawDescriptionHelpFormatter)
     parser.add_argument('file', nargs='*', default=[],
                         help='file[s] to do some work')
