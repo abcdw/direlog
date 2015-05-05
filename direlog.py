@@ -181,7 +181,12 @@ number of matches: {}
             text = input_buffer.text()
             if re.search(pattern, text):
                 if SHOW_SNIPPETS:
-                    snippet = Snippet(snippets_buffer.buf[-LINES_ABOVE:], pattern,
+                    if LINES_ABOVE > 0:
+                        snippet_begining = snippets_buffer.buf[-LINES_ABOVE:]
+                    else:
+                        snippet_begining = []
+
+                    snippet = Snippet(snippet_begining, pattern,
                                       line_number)
                     snippets_queue.push(snippet)
                 stat_collector.add(pattern)
@@ -245,7 +250,7 @@ def main():
     if args.snippets:
         kwargs['snippets_count'] = args.snippets
 
-    if args.context:
+    if args.context is not None:
         kwargs['context'] = args.context
 
     if args.original:
