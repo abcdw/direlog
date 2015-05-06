@@ -17,12 +17,15 @@ def prepare(input_stream, outfile=sys.stdout):
     :input_stream: input stream
 
     """
+    compiled_patterns = []
+    for pattern in pre_patterns:
+        compiled_patterns.append((re.compile(pattern[0]), pattern[1]))
 
     try:
         for line in input_stream:
             result = line
-            for pattern in pre_patterns:
-                result = re.sub(pattern[0], pattern[1], result, re.VERBOSE)
+            for pattern in compiled_patterns:
+                result = pattern[0].sub(pattern[1], result, re.VERBOSE)
             outfile.write(result)
     except (KeyboardInterrupt):
         pass
