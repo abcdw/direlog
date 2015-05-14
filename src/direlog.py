@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import sys
+import os
 import re
 import argparse
 import fileinput
@@ -18,13 +19,20 @@ BUFFER_SIZE = 30
 class Buffer(object):
     """Class for buffering input"""
 
-    def __init__(self):
+    def __init__(self, output_filename=os.devnull):
         self.buf = [''] * BUFFER_SIZE
         self.line_scrolled = 0
+        self.matched_lines = []
+        self.unmatched_stream = open(output_filename, 'w')
 
     def add(self, line):
         self.buf.append(line)
+        if 0 not in self.matched_lines:
+            self.unmatched_stream.write(line)
+
         self.buf = self.buf[1:BUFFER_SIZE+1]
+        self.matched_lines = filter(lambda x: x >= 0,
+                                    map(lambda x: x - 1, self.matched_lines))
         self.line_scrolled += 1
 
     def text(self):
@@ -33,6 +41,25 @@ class Buffer(object):
 
         """
         return ''.join(self.buf)
+
+    def try_to_match(self, pattern):
+        matched = re.search(pattern, self.text())
+        if matched:
+            self.mark_matched(pattern)
+        return matched
+
+    def mark_matched(self, pattern):
+        lines_count = len(pattern.split('\n'))
+        marked_lines = range(BUFFER_SIZE - lines_count, BUFFER_SIZE)
+        self.matched_lines += marked_lines
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        for _ in range(BUFFER_SIZE):
+            self.add('')
+        self.unmatched_stream.close()
 
 
 def make_escaped(string):
@@ -48,7 +75,8 @@ def make_escaped(string):
 
 def show_stat(input_stream, snippets_count=0, context=3,
               patterns=main_patterns,
-              output_stream=sys.stdout, snippets_file=None):
+              output_stream=sys.stdout, snippets_file=None,
+              unmatched_filename=os.devnull):
     """Show statistics for patterns
 
     :input_stream: input stream
@@ -165,34 +193,35 @@ number of matches: {}
     stat_collector = StatCollector()
     snippets_queue = SnippetsQueue()
     line_number = 1
-    input_buffer = Buffer()
-    if snippets_file:
-        snippets_buffer = Buffer()
-    else:
-        snippets_buffer = input_buffer
 
-    for line in input_stream:
-        input_buffer.add(line)
+    with Buffer(unmatched_filename) as input_buffer:
         if snippets_file:
-            line = snippets_file.readline()
-            snippets_buffer.add(line)
+            snippets_buffer = Buffer()
+        else:
+            snippets_buffer = input_buffer
 
-        for pattern in patterns:
-            text = input_buffer.text()
-            if re.search(pattern, text):
-                if SHOW_SNIPPETS:
-                    if LINES_ABOVE > 0:
-                        snippet_begining = snippets_buffer.buf[-LINES_ABOVE:]
-                    else:
-                        snippet_begining = []
+        for line in input_stream:
+            input_buffer.add(line)
+            if snippets_file:
+                line = snippets_file.readline()
+                snippets_buffer.add(line)
 
-                    snippet = Snippet(snippet_begining, pattern,
-                                      line_number)
-                    snippets_queue.push(snippet)
-                stat_collector.add(pattern)
+            for pattern in patterns:
+                text = input_buffer.text()
+                if input_buffer.try_to_match(pattern):
+                    if SHOW_SNIPPETS:
+                        if LINES_ABOVE > 0:
+                            snippet_begining = snippets_buffer.buf[-LINES_ABOVE:]
+                        else:
+                            snippet_begining = []
 
-        snippets_queue.add(line)
-        line_number += 1
+                        snippet = Snippet(snippet_begining, pattern,
+                                        line_number)
+                        snippets_queue.push(snippet)
+                    stat_collector.add(pattern)
+
+            snippets_queue.add(line)
+            line_number += 1
 
     snippets_queue.make_all_ready()
     if not SHOW_SNIPPETS:
@@ -224,8 +253,10 @@ def main():
                         help='show patterns')
     parser.add_argument('-e', '--escape', action='store_const', const=True,
                         help='escape given string')
-    parser.add_argument('--original', nargs=1,
+    parser.add_argument('-o', '--original', nargs=1,
                         help='provide original file for better snippets')
+    parser.add_argument('-u', '--unmatched', nargs=1,
+                        help='output unmatched text to file')
 
     args = parser.parse_args()
     # args = parser.parse_args(['error_log.prep', '-s', '2',
@@ -247,6 +278,7 @@ def main():
         return
 
     kwargs = {}
+
     if args.snippets:
         kwargs['snippets_count'] = args.snippets
 
@@ -255,6 +287,9 @@ def main():
 
     if args.original:
         kwargs['snippets_file'] = fileinput.input(args.original)
+
+    if args.unmatched is not None:
+        kwargs['unmatched_filename'] = args.unmatched[0]
 
     show_stat(input_stream_generator(), **kwargs)
 
