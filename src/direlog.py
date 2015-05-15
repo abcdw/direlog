@@ -162,7 +162,7 @@ def make_escaped(string):
     return re.escape(string.replace('\n', 'NSLPH')).replace('NSLPH', '\n') + r'\n\Z'
 
 
-def get_stat(input_stream, snippets_count=0, context=3,
+def get_stat(input_files, snippets_count=0, context=3,
               patterns=main_patterns,
               output_stream=sys.stdout, snippets_file=None,
               unmatched_filename=os.devnull):
@@ -176,6 +176,8 @@ def get_stat(input_stream, snippets_count=0, context=3,
     :returns: None
 
     """
+
+    input_stream = fileinput.input(input_files)
 
     LINES_ABOVE = context
     LINES_BELOW = context
@@ -261,6 +263,16 @@ def show_patterns():
         print '-' * 80
 
 
+def print_escaped(files):
+    input_stream = fileinput.input(files)
+    text = ''
+    for line in input_stream:
+        text += line
+    escaped_text = make_escaped(text)
+    print '\n'
+    print escaped_text
+
+
 def main():
     parser = argparse.ArgumentParser(description=\
     """
@@ -286,22 +298,18 @@ def main():
     # args = parser.parse_args(['error_log.prep', '-s', '2',
                               # '--original', 'error_log'])
 
-    def input_stream_generator(): return fileinput.input(args.file)
 
     if args.patterns:
         show_patterns()
         return
 
     if args.escape:
-        text = ''
-        for line in input_stream_generator():
-            text += line
-        escaped_text = make_escaped(text)
-        print '\n'
-        print escaped_text
+        print_escaped(args.file)
         return
 
     kwargs = {}
+
+    kwargs['input_files'] = args.file
 
     if args.snippets:
         kwargs['snippets_count'] = args.snippets
@@ -317,7 +325,7 @@ def main():
 
     kwargs['patterns'] = main_patterns
 
-    result = get_stat(input_stream_generator(), **kwargs)
+    result = get_stat(**kwargs)
     print_stat(*result, **kwargs)
 
 if __name__ == '__main__':
