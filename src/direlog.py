@@ -24,6 +24,8 @@ class Buffer(object):
         self.line_scrolled = 0
         self.matched_lines = []
         self.unmatched_stream = open(output_filename, 'w')
+        self.updated = True
+        self.last_text = ''
 
     def add(self, line):
         self.buf.append(line)
@@ -34,16 +36,21 @@ class Buffer(object):
         self.matched_lines = filter(lambda x: x >= 0,
                                     map(lambda x: x - 1, self.matched_lines))
         self.line_scrolled += 1
+        self.updated = True
 
     def text(self):
-        """Return joined lines
+        """lazy function, returning joined lines
         :returns: str()
 
         """
-        return ''.join(self.buf)
+        if self.updated:
+            self.last_text = ''.join(self.buf)
+            self.updated = False
+
+        return self.last_text
 
     def try_to_match(self, pattern):
-        matched = re.search(pattern, self.text())
+        matched = pattern.search(self.text())
         if matched:
             self.mark_matched(pattern)
         return matched
@@ -57,9 +64,91 @@ class Buffer(object):
         return self
 
     def __exit__(self, type, value, traceback):
-        for _ in range(BUFFER_SIZE):
+        for _ in xrange(BUFFER_SIZE):
             self.add('')
         self.unmatched_stream.close()
+
+
+class SnippetsQueue(object):
+    def __init__(self):
+        self.new_snippets = []
+        self.ready_snippets = {}
+        self.pattern_used = {}
+
+    def push(self, snippet):
+        if not self.pattern_used.get(pattern, False):
+            self.new_snippets.append(snippet)
+        self.pattern_used[pattern] = True
+
+    def add(self, line):
+        for snippet in self.new_snippets:
+            if snippet.full():
+                self.make_ready(snippet)
+            else:
+                snippet.add(line)
+
+    def make_ready(self, snippet):
+        self.new_snippets.remove(snippet)
+        pattern = snippet.pattern
+        try:
+            self.ready_snippets[pattern].append(snippet)
+        except KeyError:
+            self.ready_snippets[pattern] = [snippet]
+        self.pattern_used[pattern] = False
+        if len(self.ready_snippets[pattern]) == SNIPPETS_TO_SHOW:
+            self.pattern_used[pattern] = True
+
+    def make_all_ready(self):
+        for snippet in self.new_snippets:
+            self.make_ready(snippet)
+
+
+class StatCollector(object):
+
+    """Class for collecting statistics"""
+
+    def __init__(self):
+        self.match_count = {}
+        self.lines_count = 0
+        self.number_of_matched_lines = 0
+        pass
+
+    def add(self, pattern):
+        """Add pattern matching event"""
+        if pattern not in self.match_count:
+            self.match_count[pattern] = 0
+        self.match_count[pattern] += 1
+        self.number_of_matched_lines += len(pattern.split('\n'))
+
+
+def print_stat(stat_collector, snippets_queue=None, **kwargs):
+
+    """Print statistics and snippets"""
+
+    for pattern, count in stat_collector.match_count.iteritems():
+        print """\
+********************************************************************************
+pattern: "{}"
+--------------------------------------------------------------------------------
+number of matches: {}
+********************************************************************************\
+""".format(pattern, count)
+        if snippets_queue:
+            if pattern in snippets_queue.ready_snippets:
+                for snippet in snippets_queue.ready_snippets[pattern]:
+                    snippet.show()
+                    output_stream.write('-' * 80 + '\n')
+            else:
+                output_stream.write('|No snippets found : (\n')
+                output_stream.write('-' * 80 + '\n')
+
+    print 'patterns used: {}/{}'.format(
+        len(stat_collector.match_count),
+        len(kwargs['patterns']))
+    print 'number of lines matched: {}/{}'.format(
+        stat_collector.number_of_matched_lines,
+        stat_collector.lines_count)
+
 
 
 def make_escaped(string):
@@ -73,7 +162,7 @@ def make_escaped(string):
     return re.escape(string.replace('\n', 'NSLPH')).replace('NSLPH', '\n') + r'\n\Z'
 
 
-def show_stat(input_stream, snippets_count=0, context=3,
+def get_stat(input_stream, snippets_count=0, context=3,
               patterns=main_patterns,
               output_stream=sys.stdout, snippets_file=None,
               unmatched_filename=os.devnull):
@@ -119,80 +208,11 @@ def show_stat(input_stream, snippets_count=0, context=3,
                 i += 1
 
 
-    class SnippetsQueue(object):
-        def __init__(self):
-            self.new_snippets = []
-            self.ready_snippets = {}
-            self.pattern_used = {}
-
-        def push(self, snippet):
-            if not self.pattern_used.get(pattern, False):
-                self.new_snippets.append(snippet)
-            self.pattern_used[pattern] = True
-
-        def add(self, line):
-            for snippet in self.new_snippets:
-                if snippet.full():
-                    self.make_ready(snippet)
-                else:
-                    snippet.add(line)
-
-        def make_ready(self, snippet):
-            self.new_snippets.remove(snippet)
-            pattern = snippet.pattern
-            try:
-                self.ready_snippets[pattern].append(snippet)
-            except KeyError:
-                self.ready_snippets[pattern] = [snippet]
-            self.pattern_used[pattern] = False
-            if len(self.ready_snippets[pattern]) == SNIPPETS_TO_SHOW:
-                self.pattern_used[pattern] = True
-
-        def make_all_ready(self):
-            for snippet in self.new_snippets:
-                self.make_ready(snippet)
-
-
-    class StatCollector(object):
-
-        """Class for collecting statistics"""
-
-        def __init__(self):
-            self.match_count = {}
-            pass
-
-        def add(self, pattern):
-            """Add pattern matching event"""
-            if pattern not in self.match_count:
-                self.match_count[pattern] = 0
-            self.match_count[pattern] += 1
-
-
-    def print_stat(stat_collector, snippets_queue=None):
-
-        """Print statistics and snippets"""
-
-        for pattern, count in stat_collector.match_count.iteritems():
-            print """\
-********************************************************************************
-pattern: "{}"
---------------------------------------------------------------------------------
-number of matches: {}
-********************************************************************************\
-""".format(pattern, count)
-            if snippets_queue:
-                if pattern in snippets_queue.ready_snippets:
-                    for snippet in snippets_queue.ready_snippets[pattern]:
-                        snippet.show()
-                        output_stream.write('-' * 80 + '\n')
-                else:
-                    output_stream.write('|No snippets found : (\n')
-                    output_stream.write('-' * 80 + '\n')
-
-
     stat_collector = StatCollector()
     snippets_queue = SnippetsQueue()
     line_number = 1
+
+    compiled_patterns = map(re.compile, patterns)
 
     with Buffer(unmatched_filename) as input_buffer:
         if snippets_file:
@@ -206,8 +226,7 @@ number of matches: {}
                 line = snippets_file.readline()
                 snippets_buffer.add(line)
 
-            for pattern in patterns:
-                text = input_buffer.text()
+            for pattern in compiled_patterns:
                 if input_buffer.try_to_match(pattern):
                     if SHOW_SNIPPETS:
                         if LINES_ABOVE > 0:
@@ -215,18 +234,23 @@ number of matches: {}
                         else:
                             snippet_begining = []
 
-                        snippet = Snippet(snippet_begining, pattern,
+                        snippet = Snippet(snippet_begining, pattern.pattern,
                                         line_number)
                         snippets_queue.push(snippet)
-                    stat_collector.add(pattern)
+                    stat_collector.add(pattern.pattern)
 
-            snippets_queue.add(line)
+            if SHOW_SNIPPETS:
+                snippets_queue.add(line)
             line_number += 1
 
-    snippets_queue.make_all_ready()
+    stat_collector.lines_count = line_number - 1
+
     if not SHOW_SNIPPETS:
         snippets_queue = None
-    print_stat(stat_collector, snippets_queue)
+    else:
+        snippets_queue.make_all_ready()
+
+    return (stat_collector, snippets_queue)
 
 
 def show_patterns():
@@ -291,8 +315,10 @@ def main():
     if args.unmatched is not None:
         kwargs['unmatched_filename'] = args.unmatched[0]
 
-    show_stat(input_stream_generator(), **kwargs)
+    kwargs['patterns'] = main_patterns
 
+    result = get_stat(input_stream_generator(), **kwargs)
+    print_stat(*result, **kwargs)
 
 if __name__ == '__main__':
     main()
