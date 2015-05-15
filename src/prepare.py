@@ -37,7 +37,7 @@ def main():
     parser = argparse.ArgumentParser(description=\
     """
         Prepare file[s]\n\n
-        examlpe: cat error_log | tail -n 1000 | ./prepare.py
+        example: cat error_log | tail -n 1000 | ./%(prog)s
     """, formatter_class=RawDescriptionHelpFormatter)
     parser.add_argument('file', nargs='*', default=[],
                         help='file[s] to do some work')

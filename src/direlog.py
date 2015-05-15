@@ -277,7 +277,11 @@ def main():
     parser = argparse.ArgumentParser(description=\
     """
         Parse file[s]\n\n
-        examlpe: ./direlog.py file[s] -s 2 -C 3
+        examples:
+        ./%(prog)s file[s] -s 2 -C 3
+        cat error_log | tail -n 1000 | ./prepare.py | ./%(prog)s
+        ./%(prog)s -p
+        echo "some \\ntext, that wants to be pattern" | ./%(prog)s -e
     """, formatter_class=RawDescriptionHelpFormatter)
     parser.add_argument('file', nargs='*', default=[],
                         help='file[s] to be parsed')
@@ -295,9 +299,6 @@ def main():
                         help='output unmatched text to file')
 
     args = parser.parse_args()
-    # args = parser.parse_args(['error_log.prep', '-s', '2',
-                              # '--original', 'error_log'])
-
 
     if args.patterns:
         show_patterns()
@@ -327,6 +328,7 @@ def main():
 
     result = get_stat(**kwargs)
     print_stat(*result, **kwargs)
+
 
 if __name__ == '__main__':
     main()
