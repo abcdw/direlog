@@ -70,12 +70,14 @@ class Buffer(object):
 
 
 class SnippetsQueue(object):
-    def __init__(self):
+    def __init__(self, snippets_count):
+        self.SNIPPETS_TO_SHOW = snippets_count
         self.new_snippets = []
         self.ready_snippets = {}
         self.pattern_used = {}
 
     def push(self, snippet):
+        pattern = snippet.pattern
         if not self.pattern_used.get(pattern, False):
             self.new_snippets.append(snippet)
         self.pattern_used[pattern] = True
@@ -95,7 +97,7 @@ class SnippetsQueue(object):
         except KeyError:
             self.ready_snippets[pattern] = [snippet]
         self.pattern_used[pattern] = False
-        if len(self.ready_snippets[pattern]) == SNIPPETS_TO_SHOW:
+        if len(self.ready_snippets[pattern]) == self.SNIPPETS_TO_SHOW:
             self.pattern_used[pattern] = True
 
     def make_all_ready(self):
@@ -124,15 +126,16 @@ class StatCollector(object):
 def print_stat(stat_collector, snippets_queue=None, **kwargs):
 
     """Print statistics and snippets"""
+    output_stream = sys.stdout
 
     for pattern, count in stat_collector.match_count.iteritems():
-        print """\
+        output_stream.write("""\
 ********************************************************************************
 pattern: "{}"
 --------------------------------------------------------------------------------
 number of matches: {}
-********************************************************************************\
-""".format(pattern, count)
+********************************************************************************\n\
+""".format(pattern, count))
         if snippets_queue:
             if pattern in snippets_queue.ready_snippets:
                 for snippet in snippets_queue.ready_snippets[pattern]:
@@ -142,12 +145,12 @@ number of matches: {}
                 output_stream.write('|No snippets found : (\n')
                 output_stream.write('-' * 80 + '\n')
 
-    print 'patterns used: {}/{}'.format(
+    output_stream.write('patterns used: {}/{}\n'.format(
         len(stat_collector.match_count),
-        len(kwargs['patterns']))
-    print 'number of lines matched: {}/{}'.format(
+        len(kwargs['patterns'])))
+    output_stream.write('number of lines matched: {}/{}\n'.format(
         stat_collector.number_of_matched_lines,
-        stat_collector.lines_count)
+        stat_collector.lines_count))
 
 
 
@@ -181,7 +184,6 @@ def get_stat(input_files, snippets_count=0, context=3,
 
     LINES_ABOVE = context
     LINES_BELOW = context
-    SNIPPETS_TO_SHOW = snippets_count
     SHOW_SNIPPETS = snippets_count > 0
 
     class Snippet(object):
@@ -211,7 +213,7 @@ def get_stat(input_files, snippets_count=0, context=3,
 
 
     stat_collector = StatCollector()
-    snippets_queue = SnippetsQueue()
+    snippets_queue = SnippetsQueue(snippets_count)
     line_number = 1
 
     compiled_patterns = map(re.compile, patterns)
