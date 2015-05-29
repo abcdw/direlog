@@ -53,3 +53,12 @@ docs/_build/
 
 # PyBuilder
 target/
+
+
+# LaTeX
+*.aux
+*.toc
+*.synctex.gz
+
+# Mac OSX
+.DS_Store

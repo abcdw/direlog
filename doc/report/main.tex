@@ -1,0 +1,81 @@
+\documentclass[a4paper,12pt]{report}
+
+\usepackage[unicode,colorlinks=true,linkcolor=blue]{hyperref}
+% здесь подключении шрифтов в русскими буквами
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{amsmath,amsthm,amssymb,amsfonts,mathtext,cite,enumerate,float}
+%\usepackage[dvips]{graphicx}
+\usepackage[pdftex]{graphicx}
+\graphicspath{{images/}}
+\usepackage{fix-cm}
+
+\makeatletter
+\renewcommand{\@biblabel}[1]{#1.}
+\makeatother
+
+\usepackage{geometry}  % Меняем поля страницы
+\geometry{left=2cm}    % левое поле
+\geometry{right=1.5cm} % правое поле
+\geometry{top=1cm}     % верхнее поле
+\geometry{bottom=2cm}  % нижнее поле
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\renewcommand{\theenumi}{\arabic{enumi}}                                       % Меняем везде перечисления на цифра.цифра
+\renewcommand{\labelenumi}{\arabic{enumi}}                                     % Меняем везде перечисления на цифра.цифра
+\renewcommand{\theenumii}{.\arabic{enumii}}                                    % Меняем везде перечисления на цифра.цифра
+\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}.}                   % Меняем везде перечисления на цифра.цифра
+\renewcommand{\theenumiii}{.\arabic{enumiii}}                                  % Меняем везде перечисления на цифра.цифра
+\renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}.} % Меняем везде перечисления на цифра.цифра
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Теорема}[section]
+\newtheorem{lemma}[theorem]{Лемма}
+\theoremstyle{definition}
+\newtheorem{definition}{Определение}
+\theoremstyle{remark}
+\newtheorem*{example}{Пример}
+\newtheorem*{remark}{Замечание}
+
+
+\begin{document}
+  % \input{title}
+
+
+
+  Разработка алгоритма для выделения частовстречающихся паттернов из логов программ
+  \tableofcontents
+
+  \chapter*{Введение}
+  \addcontentsline{toc}{chapter}{Введение}
+  \chapter{Анализ предметной области}
+  \section{Представление задачи в терминах MapReduce}
+  \section{Структура данных}
+  \section{Стадии выполнения задачи}
+  \section{Выбор языка программирования и средств разработки}
+
+  \chapter{Имплементация задачи}
+  \section{Диаграмма компонентов}
+  \section{Описание способов запуска}
+  % Структурная схема приложения питонячие файлики, тесты, примеры логов.
+  % как запускаются, как работают.
+  \section{Анализ полученных результатов}
+  % Что получил
+
+  \chapter{Дальнейшее развитие}
+  % Автоматическое выделение паттернов. Итерационная схема с эвристикой.
+  % Интеграция с другими программными продуктами.
+
+
+
+  \chapter*{Заключение}
+  \addcontentsline{toc}{chapter}{Заключение}
+  % Делали, сделали за пол года такой кусок, есть план на следующий год.
+
+  % \part{}
+  %\input{ch1}
+
+\end{document}
+
