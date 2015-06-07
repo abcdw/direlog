@@ -1,15 +1,14 @@
-\documentclass[a4paper,12pt]{report}
+\documentclass[a4paper,14pt]{extreport}
 
-\usepackage[unicode,colorlinks=true,linkcolor=blue]{hyperref}
-% здесь подключении шрифтов в русскими буквами
+\usepackage[unicode,hidelinks]{hyperref}
 \usepackage[T2A]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[english,russian]{babel}
 \usepackage{amsmath,amsthm,amssymb,amsfonts,mathtext,cite,enumerate,float}
-%\usepackage[dvips]{graphicx}
 \usepackage[pdftex]{graphicx}
 \graphicspath{{images/}}
 \usepackage{fix-cm}
+\usepackage{lastpage}
 
 \makeatletter
 \renewcommand{\@biblabel}[1]{#1.}
@@ -18,10 +17,51 @@
 \usepackage{geometry}  % Меняем поля страницы
 \geometry{left=2cm}    % левое поле
 \geometry{right=1.5cm} % правое поле
-\geometry{top=1cm}     % верхнее поле
+\geometry{top=2cm}     % верхнее поле
 \geometry{bottom=2cm}  % нижнее поле
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\usepackage{indentfirst}
+\setlength\parindent{5ex}
+
+\usepackage{titlesec}
+
+\titleformat{\chapter}[block]
+  {\filcenter}
+  {\thechapter}
+  {1em}
+  {\MakeUppercase}{}
+
+\titlespacing*{\chapter}{0pt}{-30pt}{*4}
+
+\titleformat{\section}
+  {}
+  {\thesection}
+  {1ex}{}
+
+\titlespacing*{\section}{\parindent}{*4}{*4}
+
+\newcommand\chap[1]{%
+  \chapter*{#1}%
+  \addcontentsline{toc}{chapter}{#1}}
+% Add chapter to toc
+
+\addto{\captionsrussian}{\renewcommand*{\contentsname}{Содержание}}
+
+\usepackage{enumitem}
+\makeatletter
+    \AddEnumerateCounter{\asbuk}{\@asbuk}{ю)}
+\makeatother
+\setlist{nosep, leftmargin=\parindent}
+
+%  маркированные списки
+\renewcommand{\labelitemi}{--}
+\renewcommand{\labelitemii}{--}
+%  нумерованные списки
+\renewcommand{\labelenumi}{\asbuk{enumi})}
+\renewcommand{\labelenumii}{\arabic{enumii})}
+
 
 \renewcommand{\theenumi}{\arabic{enumi}}                                       % Меняем везде перечисления на цифра.цифра
 \renewcommand{\labelenumi}{\arabic{enumi}}                                     % Меняем везде перечисления на цифра.цифра
@@ -40,16 +80,21 @@
 \newtheorem*{remark}{Замечание}
 
 
+
+
 \begin{document}
-  % \input{title}
+  \input{title}
 
 
+  \chap{Реферат}
+  \input{abstract}
 
-  Разработка алгоритма для выделения частовстречающихся шаблонов ошибок из log-файлов программ
   \tableofcontents
 
-  \chapter*{Введение}
-  \addcontentsline{toc}{chapter}{Введение}
+  \chap{Нормативные ссылки}
+  \chap{Определения, обозначения и сокращения}
+
+  \chap{Введение}
   \input{intro}
   \chapter{Анализ предметной области}
   \input{analysis}
@@ -68,10 +113,11 @@
 
 
 
-  \chapter*{Заключение}
-  \addcontentsline{toc}{chapter}{Заключение}
+  \chap{Заключение}
   % Делали, сделали за пол года такой кусок, есть план на следующий год.
 
+  \chapter{Список использованных источников}
+  \chapter{Приложения}
   % \part{}
   %\input{ch1}
 
