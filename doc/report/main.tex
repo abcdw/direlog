@@ -49,11 +49,18 @@
 
 \addto{\captionsrussian}{\renewcommand*{\contentsname}{Содержание}}
 
-\usepackage{enumitem}
-\makeatletter
-    \AddEnumerateCounter{\asbuk}{\@asbuk}{ю)}
-\makeatother
-\setlist{nosep, leftmargin=\parindent}
+\renewcommand{\theenumi}{\arabic{enumi}}                                       % Меняем везде перечисления на цифра.цифра
+\renewcommand{\labelenumi}{\arabic{enumi}}                                     % Меняем везде перечисления на цифра.цифра
+\renewcommand{\theenumii}{.\arabic{enumii}}                                    % Меняем везде перечисления на цифра.цифра
+\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}.}                   % Меняем везде перечисления на цифра.цифра
+\renewcommand{\theenumiii}{.\arabic{enumiii}}                                  % Меняем везде перечисления на цифра.цифра
+\renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}.} % Меняем везде перечисления на цифра.цифра
+
+% \usepackage{enumitem}
+% \makeatletter
+    % \AddEnumerateCounter{\asbuk}{\@asbuk}{ю)}
+% \makeatother
+% \setlist{nosep, leftmargin=\parindent}
 
 %  маркированные списки
 \renewcommand{\labelitemi}{--}
@@ -63,12 +70,6 @@
 \renewcommand{\labelenumii}{\arabic{enumii})}
 
 
-\renewcommand{\theenumi}{\arabic{enumi}}                                       % Меняем везде перечисления на цифра.цифра
-\renewcommand{\labelenumi}{\arabic{enumi}}                                     % Меняем везде перечисления на цифра.цифра
-\renewcommand{\theenumii}{.\arabic{enumii}}                                    % Меняем везде перечисления на цифра.цифра
-\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}.}                   % Меняем везде перечисления на цифра.цифра
-\renewcommand{\theenumiii}{.\arabic{enumiii}}                                  % Меняем везде перечисления на цифра.цифра
-\renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}.} % Меняем везде перечисления на цифра.цифра
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Теорема}[section]
@@ -109,7 +110,7 @@
   \section{Анализ полученных результатов}
   % Что получил
 
-  \chap{Дальнейшее развитие}
+  \section{Дальнейшее развитие}
   % Автоматическое выделение паттернов. Итерационная схема с эвристикой.
   % Интеграция с другими программными продуктами.
 
