@@ -9,6 +9,7 @@
 \graphicspath{{images/}}
 \usepackage{fix-cm}
 \usepackage{lastpage}
+\usepackage{minted}
 
 \makeatletter
 \renewcommand{\@biblabel}[1]{#1.}
@@ -84,23 +85,23 @@
 
 
 \begin{document}
-  \input{title}
+  \input{chapters/title}
 
 
   \chap{Реферат}
-  \input{abstract}
+  \input{chapters/abstract}
 
   \tableofcontents
 
   \chap{Нормативные ссылки}
-  \input{standarts}
+  \input{chapters/standarts}
   \chap{Определения, обозначения и сокращения}
-  \input{definitions}
+  \input{chapters/definitions}
 
   \chap{Введение}
-  \input{intro}
+  \input{chapters/intro}
   \chapter{Анализ предметной области}
-  \input{analysis}
+  \input{chapters/analysis}
 
   \chapter{Имплементация задачи}
   \section{Диаграмма компонентов}
@@ -121,6 +122,7 @@
 
   \chap{Список использованных источников}
   \chap{Приложения}
+  \inputminted[fontsize=\small, fontfamily=rm]{python}{../../direlog/direlog.py}
   % \part{}
   %\input{ch1}
 
