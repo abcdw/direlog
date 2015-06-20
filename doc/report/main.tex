@@ -16,7 +16,7 @@
 \makeatother
 
 \usepackage{geometry}  % Меняем поля страницы
-\geometry{left=2cm}    % левое поле
+\geometry{left=3cm}    % левое поле
 \geometry{right=1.5cm} % правое поле
 \geometry{top=2cm}     % верхнее поле
 \geometry{bottom=2cm}  % нижнее поле
@@ -85,8 +85,7 @@
 
 
 \begin{document}
-  \input{chapters/title}
-
+  % \input{chapters/title}
 
   \chap{Реферат}
   \input{chapters/abstract}
@@ -95,27 +94,24 @@
 
   \chap{Нормативные ссылки}
   \input{chapters/standarts}
+
   \chap{Определения, обозначения и сокращения}
   \input{chapters/definitions}
 
   \chap{Введение}
   \input{chapters/intro}
-  \chapter{Анализ предметной области}
+
+  \chapter{Современное состояние проблемы анализа файлов журналов}
   \input{chapters/analysis}
 
-  \chapter{Имплементация задачи}
-  \section{Диаграмма компонентов}
-  \section{Описание способов запуска}
-  % Структурная схема приложения питонячие файлики, тесты, примеры логов.
-  % как запускаются, как работают.
-  \section{Анализ полученных результатов}
-  % Что получил
+  \chapter{Проектирование алгоритма}
+  \input{chapters/design}
 
-  \section{Дальнейшее развитие}
-  % Автоматическое выделение паттернов. Итерационная схема с эвристикой.
-  % Интеграция с другими программными продуктами.
+  \chapter{Реализация}
+  \input{chapters/realization}
 
-
+  \chapter{Тестирование и обсуждение результатов}
+  \input{chapters/testing}
 
   \chap{Заключение}
   % Делали, сделали за пол года такой кусок, есть план на следующий год.
