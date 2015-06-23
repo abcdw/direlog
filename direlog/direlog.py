@@ -38,6 +38,7 @@ class Buffer(object):
         self.line_scrolled += 1
         self.updated = True
 
+    @property
     def text(self):
         """lazy function, returning joined lines
         :returns: str()
@@ -50,7 +51,7 @@ class Buffer(object):
         return self.last_text
 
     def try_to_match(self, pattern):
-        matched = pattern.search(self.text())
+        matched = pattern.search(self.text)
         if matched:
             self.mark_matched(pattern)
         return matched
