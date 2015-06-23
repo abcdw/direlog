@@ -1,0 +1,137 @@
+\documentclass[a4paper,14pt]{extreport}
+
+\usepackage[unicode,hidelinks]{hyperref}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{amsmath,amsthm,amssymb,amsfonts,mathtext,cite,enumerate,float}
+\usepackage[pdftex]{graphicx}
+\graphicspath{{images/}}
+\usepackage{fix-cm}
+\usepackage{lastpage}
+\usepackage{minted}
+\usepackage[title,titletoc]{appendix}
+
+\newcommand{\empline}{\mbox{}\newline} % пустая строка
+
+\newcommand{\append}[1]{
+    \clearpage
+    \stepcounter{chapter}
+    \begin{center}
+        \chaptertitlename~\Asbuk{chapter}
+    \end{center}
+    \begin{center}{#1}\end{center}
+    \empline
+    \addcontentsline{toc}{chapter}{\Asbuk{chapter}\hspace{0.6em}~#1}}
+
+\makeatletter
+\renewcommand{\@biblabel}[1]{#1.}
+\makeatother
+
+\usepackage{geometry}  % Меняем поля страницы
+\geometry{left=3cm}    % левое поле
+\geometry{right=1.5cm} % правое поле
+\geometry{top=2cm}     % верхнее поле
+\geometry{bottom=2cm}  % нижнее поле
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\usepackage{indentfirst}
+\setlength\parindent{5ex}
+
+\usepackage{titlesec}
+
+\titleformat{\chapter}[block]
+  {\filcenter}
+  {\thechapter}
+  {1em}
+  {\MakeUppercase}{}
+
+% \titlespacing*{\chapter}{0pt}{-30pt}{*4}
+
+% \titleformat{\section}
+  % {}
+  % {\thesection}
+  % {1ex}{}
+
+% \titlespacing*{\section}{\parindent}{*4}{*4}
+
+\newcommand\chap[1]{%
+  \chapter*{#1}%
+  \addcontentsline{toc}{chapter}{#1}}
+% Add chapter to toc
+
+\addto{\captionsrussian}{\renewcommand*{\contentsname}{Содержание}}
+
+\renewcommand{\theenumi}{\arabic{enumi}}                                       % Меняем везде перечисления на цифра.цифра
+\renewcommand{\labelenumi}{\arabic{enumi}}                                     % Меняем везде перечисления на цифра.цифра
+\renewcommand{\theenumii}{.\arabic{enumii}}                                    % Меняем везде перечисления на цифра.цифра
+\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}.}                   % Меняем везде перечисления на цифра.цифра
+\renewcommand{\theenumiii}{.\arabic{enumiii}}                                  % Меняем везде перечисления на цифра.цифра
+\renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}.} % Меняем везде перечисления на цифра.цифра
+
+% \usepackage{enumitem}
+% \makeatletter
+    % \AddEnumerateCounter{\asbuk}{\@asbuk}{ю)}
+% \makeatother
+% \setlist{nosep, leftmargin=\parindent}
+
+%  маркированные списки
+\renewcommand{\labelitemi}{--}
+\renewcommand{\labelitemii}{--}
+%  нумерованные списки
+\renewcommand{\labelenumi}{\asbuk{enumi})}
+\renewcommand{\labelenumii}{\arabic{enumii})}
+
+
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Теорема}[section]
+\newtheorem{lemma}[theorem]{Лемма}
+\theoremstyle{definition}
+\newtheorem{definition}{Определение}
+\theoremstyle{remark}
+\newtheorem*{example}{Пример}
+\newtheorem*{remark}{Замечание}
+
+\linespread{1.25}
+
+
+\begin{document}
+  \input{chapters/title}
+
+  \chap{Реферат}
+  \input{chapters/abstract}
+
+  \tableofcontents
+
+  \chap{Нормативные ссылки}
+  \input{chapters/standarts}
+
+  \chap{Определения, обозначения и сокращения}
+  \input{chapters/definitions}
+
+  \chap{Введение}
+  \input{chapters/intro}
+
+  \chapter{Современное состояние проблемы анализа файлов журналов}
+  \input{chapters/analysis}
+
+  \chapter{Проектирование алгоритма}
+  \input{chapters/design}
+
+  \chapter{Реализация}
+  \input{chapters/realization}
+
+  % \chapter{Тестирование и анализ результатов}
+  % \input{chapters/testing}
+
+  \chap{Заключение}
+  \input{chapters/conclusion}
+
+  \input{chapters/bibl}
+  \chap{Приложения}
+  \input{chapters/appendix}
+
+\end{document}
+

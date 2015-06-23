@@ -1,0 +1,12 @@
+\beamer@endinputifotherversion {3.33pt}
+\select@language {russian}
+\beamer@sectionintoc {1}{\IeC {\CYRC }\IeC {\cyre }\IeC {\cyrl }\IeC {\cyri }}{2}{0}{1}
+\beamer@sectionintoc {2}{\IeC {\CYRP }\IeC {\cyro }\IeC {\cyrs }\IeC {\cyrt }\IeC {\cyra }\IeC {\cyrn }\IeC {\cyro }\IeC {\cyrv }\IeC {\cyrk }\IeC {\cyra } \IeC {\cyrz }\IeC {\cyra }\IeC {\cyrd }\IeC {\cyra }\IeC {\cyrch }}{3}{0}{2}
+\beamer@subsectionintoc {2}{1}{\IeC {\CYRK }\IeC {\cyrr }\IeC {\cyra }\IeC {\cyrt }\IeC {\cyrk }\IeC {\cyro }\IeC {\cyre } \IeC {\cyro }\IeC {\cyrp }\IeC {\cyri }\IeC {\cyrs }\IeC {\cyra }\IeC {\cyrn }\IeC {\cyri }\IeC {\cyre } \IeC {\cyra }\IeC {\cyrr }\IeC {\cyrh }\IeC {\cyri }\IeC {\cyrt }\IeC {\cyre }\IeC {\cyrk }\IeC {\cyrt }\IeC {\cyru }\IeC {\cyrr }\IeC {\cyrery }}{3}{0}{2}
+\beamer@subsectionintoc {2}{2}{\IeC {\CYRP }\IeC {\cyrr }\IeC {\cyro }\IeC {\cyrb }\IeC {\cyrl }\IeC {\cyre }\IeC {\cyrm }\IeC {\cyrery }}{4}{0}{2}
+\beamer@subsectionintoc {2}{3}{\IeC {\CYRZ }\IeC {\cyra }\IeC {\cyrd }\IeC {\cyra }\IeC {\cyrch }\IeC {\cyri }}{5}{0}{2}
+\beamer@sectionintoc {3}{\IeC {\CYRR }\IeC {\cyre }\IeC {\cyrz }\IeC {\cyru }\IeC {\cyrl }\IeC {\cyrsftsn }\IeC {\cyrt }\IeC {\cyra }\IeC {\cyrt }\IeC {\cyrery }}{6}{0}{3}
+\beamer@subsectionintoc {3}{1}{\IeC {\CYRI }\IeC {\cyrt }\IeC {\cyro }\IeC {\cyrg } \IeC {\cyrr }\IeC {\cyra }\IeC {\cyrb }\IeC {\cyro }\IeC {\cyrt }\IeC {\cyrery }}{6}{0}{3}
+\beamer@subsectionintoc {3}{2}{\IeC {\CYRP }\IeC {\cyrr }\IeC {\cyri }\IeC {\cyrm }\IeC {\cyre }\IeC {\cyrr } \IeC {\cyri }\IeC {\cyrs }\IeC {\cyrp }\IeC {\cyro }\IeC {\cyrl }\IeC {\cyrsftsn }\IeC {\cyrz }\IeC {\cyro }\IeC {\cyrv }\IeC {\cyra }\IeC {\cyrn }\IeC {\cyri }\IeC {\cyrya }}{7}{0}{3}
+\beamer@subsectionintoc {3}{3}{\IeC {\CYRD }\IeC {\cyra }\IeC {\cyrl }\IeC {\cyrsftsn }\IeC {\cyrn }\IeC {\cyre }\IeC {\cyrishrt }\IeC {\cyrsh }\IeC {\cyri }\IeC {\cyre } \IeC {\cyrd }\IeC {\cyre }\IeC {\cyrishrt }\IeC {\cyrs }\IeC {\cyrt }\IeC {\cyrv }\IeC {\cyri }\IeC {\cyrya }}{8}{0}{3}
+\beamer@sectionintoc {4}{\IeC {\CYRK }\IeC {\cyro }\IeC {\cyrn }\IeC {\cyre }\IeC {\cyrc }}{9}{0}{4}
