@@ -10,6 +10,19 @@
 \usepackage{fix-cm}
 \usepackage{lastpage}
 \usepackage{minted}
+\usepackage[title,titletoc]{appendix}
+
+\newcommand{\empline}{\mbox{}\newline} % пустая строка
+
+\newcommand{\append}[1]{
+    \clearpage
+    \stepcounter{chapter}
+    \begin{center}
+        \chaptertitlename~\Asbuk{chapter}
+    \end{center}
+    \begin{center}{#1}\end{center}
+    \empline
+    \addcontentsline{toc}{chapter}{\Asbuk{chapter}\hspace{0.6em}~#1}}
 
 \makeatletter
 \renewcommand{\@biblabel}[1]{#1.}
@@ -34,14 +47,14 @@
   {1em}
   {\MakeUppercase}{}
 
-\titlespacing*{\chapter}{0pt}{-30pt}{*4}
+% \titlespacing*{\chapter}{0pt}{-30pt}{*4}
 
-\titleformat{\section}
-  {}
-  {\thesection}
-  {1ex}{}
+% \titleformat{\section}
+  % {}
+  % {\thesection}
+  % {1ex}{}
 
-\titlespacing*{\section}{\parindent}{*4}{*4}
+% \titlespacing*{\section}{\parindent}{*4}{*4}
 
 \newcommand\chap[1]{%
   \chapter*{#1}%
@@ -118,7 +131,7 @@
 
   \chap{Список использованных источников}
   \chap{Приложения}
-  \inputminted[fontsize=\small, fontfamily=rm]{python}{../../direlog/direlog.py}
+  \input{chapters/appendix}
   % \part{}
   %\input{ch1}
 
